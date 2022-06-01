@@ -106,25 +106,28 @@ def images_to_tfrecords(image_dir, data_dir, has_labels):
             if file_format not in ['png', 'jpg', 'jpeg']:
                 continue
 
-            #img = Image.open(os.path.join(image_dir, label_dir, img_file)).resize(img_size)
-            img = Image.open(os.path.join(image_dir, img_file))
-            img = np.array(img, dtype=np.uint8)
+            try: 
+                #img = Image.open(os.path.join(image_dir, label_dir, img_file)).resize(img_size)
+                img = Image.open(os.path.join(image_dir, img_file))
+                img = np.array(img, dtype=np.uint8)
 
-            height = img.shape[0]
-            width = img.shape[1]
-            channels = img.shape[2]
+                height = img.shape[0]
+                width = img.shape[1]
+                channels = img.shape[2]
 
-            img_encoded = img.tobytes()
+                img_encoded = img.tobytes()
 
-            example = tf.train.Example(features=tf.train.Features(feature={
-                'height': _int64_feature(height),
-                'width': _int64_feature(width),
-                'channels': _int64_feature(channels),
-                'image': _bytes_feature(img_encoded),
-                'label': _int64_feature(num_classes)})) # dummy label
+                example = tf.train.Example(features=tf.train.Features(feature={
+                    'height': _int64_feature(height),
+                    'width': _int64_feature(width),
+                    'channels': _int64_feature(channels),
+                    'image': _bytes_feature(img_encoded),
+                    'label': _int64_feature(num_classes)})) # dummy label
 
-            writer.write(example.SerializeToString())
-            num_examples += 1
+                writer.write(example.SerializeToString())
+                num_examples += 1
+            except Exception as detail:
+                print(f"Exception while loading image {img_file}: \n {detail}")
 
     writer.close()
 
