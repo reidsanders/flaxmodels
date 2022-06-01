@@ -1,9 +1,8 @@
 numpy
 tensorflow-datasets
-tensorflow==2.4.1
+tensorflow
 flax
 optax
-git+https://github.com/matthias-wright/flaxmodels.git
 argparse
 wandb
 tqdm
