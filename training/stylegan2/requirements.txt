@@ -1,7 +1,7 @@
 numpy
+git+https://github.com/matthias-wright/flaxmodels.git
 tensorflow-datasets
-tensorflow
-flax
+tensorflow==2.4.1
 optax
 argparse
 wandb
