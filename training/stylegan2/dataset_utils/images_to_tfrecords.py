@@ -63,15 +63,16 @@ def images_to_tfrecords(image_dir, data_dir, has_labels):
     num_classes = 0
 
     if has_labels:
-        for label_dir in os.listdir(image_dir):
-            if not os.path.isdir(os.path.join(image_dir, label_dir)):
-                print('The image directory should contain one directory for each label.')
-                print('These label directories should contain the image files.')
-                if os.path.exists(os.path.join(data_dir, 'dataset.tfrecords')):
-                    os.remove(os.path.join(data_dir, 'dataset.tfrecords'))
-                return
-            
-            for img_file in tqdm(os.listdir(os.path.join(image_dir, label_dir))):
+        label_dirs = [x.path for x in os.scandir(image_dir) if x.is_dir()]
+        if len(label_dirs) == 0:
+            print('The image directory should contain one directory for each label.')
+            print('These label directories should contain the image files.')
+            if os.path.exists(os.path.join(data_dir, 'dataset.tfrecords')):
+                os.remove(os.path.join(data_dir, 'dataset.tfrecords'))
+            return
+
+        for label_dir in label_dirs:
+            for img_file in tqdm(os.listdir(label_dir)):
                 file_format = img_file[img_file.rfind('.') + 1:]
                 if file_format not in ['png', 'jpg', 'jpeg']:
                     continue
